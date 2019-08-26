@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.northpole.spiritblade.controllers.CollisionController;
 import com.northpole.spiritblade.controllers.impl.CollisionControllerImpl;
+import com.northpole.spiritblade.enums.Direction;
 
 public class BoxCollider implements Collider {
 	private Rectangle colliderArea;
@@ -37,7 +38,15 @@ public class BoxCollider implements Collider {
     	for (Collider nearbyCollider : nearbyColliders) 	
         	if(this.collisionController.checkCollision(this,nearbyCollider)) 
         		return nearbyCollider;
-
+    	
+    	return null;
+	}
+	
+	public Collider getCollision(List<Collider> nearbyColliders, float step, Direction direction) {
+    	for (Collider nearbyCollider : nearbyColliders) 	
+        	if(this.collisionController.checkCollision(this,nearbyCollider,step, direction)) 
+        		return nearbyCollider;
+    	
     	return null;
 	}
 }

@@ -7,8 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.northpole.spiritblade.controllers.WorldController;
+import com.badlogic.gdx.math.Vector3;
+import com.northpole.spiritblade.controllers.MapController;
 import com.northpole.spiritblade.gameEntities.Collider;
+import com.northpole.spiritblade.gameEntities.GameCharacter;
 import com.northpole.spiritblade.gameEntities.Player;
 import com.northpole.spiritblade.gameEntities.items.equipment.impl.PlateArmor;
 import com.northpole.spiritblade.gameEntities.items.equipment.impl.PlateBoots;
@@ -21,16 +23,15 @@ import com.northpole.spiritblade.controllers.impl.GameController;
 
 public class GameScreen implements Screen {
     private GameController gameController;
-	private WorldController worldController;
+	private MapController mapController;
 	private Player player;
 	private Camera camera;
 	
 	private ShapeRenderer shapeRenderer;
 	
-	
 	public GameScreen() {
 		this.gameController = new GameController();
-		this.worldController = gameController.getWorldController();
+		this.mapController = gameController.getMapController();
 		this.player = gameController.getPlayer();
 		this.camera = gameController.getCamera();
 		
@@ -44,6 +45,8 @@ public class GameScreen implements Screen {
 		this.player.equip(new PlateBoots(0));
 		this.player.equip(new PlateShoulders(0));
 		this.player.equip(new PlateGauntlets(0));
+		
+		
 	}
 	
 	
@@ -62,16 +65,14 @@ public class GameScreen implements Screen {
         camera.position.set(player.getPosition().x+Player.SPRITE_WIDTH/2, player.getPosition().y, 0);
         camera.update();
         
-        worldController.render();
-        
-        player.setProjectionMatrix(camera.combined);
-        player.render();
-        
-        //drawCollisionBorders();
-        
-        Collider incomingCollider = player.getCollider().getCollision(worldController.getNearbyColliders(player.getPosition(),100f));
-        player.applyNormalForce(incomingCollider);
+        mapController.render();
 
+        
+        for(GameCharacter gc : mapController.getNearbyMonsters(player.getPosition(), 100f)) 
+        	gc.setDestination(new Vector3(player.getPosition()));
+
+        
+        drawCollisionBorders();
 	}
 
 	private void drawCollisionBorders() {
@@ -79,7 +80,7 @@ public class GameScreen implements Screen {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeType.Line);
         
-        for (Collider worldObjectCollider : worldController.getNearbyColliders(player.getPosition(),100f)) {	
+        for (Collider worldObjectCollider : mapController.getNearbyColliders(player.getPosition(),100f)) {	
         	shapeRenderer.setColor(Color.BLUE);
     		shapeRenderer.rect(worldObjectCollider.getPosition().x, worldObjectCollider.getPosition().y, 
     				worldObjectCollider.getColliderSize().x, worldObjectCollider.getColliderSize().y);
@@ -119,8 +120,7 @@ public class GameScreen implements Screen {
 	}
 
 	public void dispose() {
-		player.dispose();
-		worldController.dispose();
+		mapController.dispose();
 	}
 
 }

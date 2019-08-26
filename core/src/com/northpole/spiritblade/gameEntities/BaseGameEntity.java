@@ -3,6 +3,7 @@ package com.northpole.spiritblade.gameEntities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.northpole.spiritblade.enums.Direction;
 
@@ -13,6 +14,14 @@ public abstract class BaseGameEntity implements GameEntity {
 	protected Sprite sprite;
     protected Texture texture;
     protected Vector3 destination;
+    
+    public BaseGameEntity(Vector3 position) {
+    	this.sb = new SpriteBatch();
+    	 this.direction = Direction.SOUTH;
+         
+         this.position = new Vector3(position);
+         this.destination= this.position;
+    }
     
 	public void setPosition(Vector3 position) {
 		this.position = position;
@@ -49,5 +58,9 @@ public abstract class BaseGameEntity implements GameEntity {
 	public void dispose() {
 		sb.dispose();
 		texture.dispose();
+	}
+	
+	public void setProjectionMatrix(Matrix4 projection) {
+		this.sb.setProjectionMatrix(projection);
 	}
 }

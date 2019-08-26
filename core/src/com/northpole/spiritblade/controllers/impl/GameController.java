@@ -5,7 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.northpole.spiritblade.controllers.CollisionController;
-import com.northpole.spiritblade.controllers.WorldController;
+import com.northpole.spiritblade.controllers.MapController;
 import com.northpole.spiritblade.gameEntities.Player;
 
 public class GameController {
@@ -14,7 +14,7 @@ public class GameController {
 	private Player player;
 	
 	private InputProcessor input;
-	private WorldController worldController;
+	private MapController mapController;
 	
 	private CollisionController collisionController;
 	
@@ -28,9 +28,13 @@ public class GameController {
         this.camera.setToOrtho(false,w,h);
         this.camera.update();
         
+		this.mapController = new MapControllerImpl(this.camera);
+		
+		mapController.spawnMonsters();
+		
 		this.player = new Player(new Vector3(300,350,0));
 		
-		this.worldController = new WorldControllerImpl(this.camera);
+		mapController.spawnPlayer(player);
 		
 		this.collisionController = new CollisionControllerImpl();
 		
@@ -41,8 +45,8 @@ public class GameController {
 		return player;
 	}
 
-	public WorldController getWorldController() {
-		return worldController;
+	public MapController getMapController() {
+		return this.mapController;
 	}
 	
 	public OrthographicCamera getCamera() {

@@ -23,7 +23,6 @@ public class CharacterAnimationController implements AnimationController {
 	private Animation<TextureRegion> idleNorthAnimation;
 	private Animation<TextureRegion> idleEastAnimation;
 	
-	private Player player;
 	
 	public CharacterAnimationController(SpriteBatch sb, Texture texture) {
 		this.baseRegions = TextureRegion.split(texture, Player.SPRITE_WIDTH,Player.SPRITE_HEIGHT);
